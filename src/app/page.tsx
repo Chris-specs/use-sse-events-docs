@@ -1,9 +1,9 @@
-import { ApiReference } from '@/components/api-reference'
-import { Features } from '@/components/features'
-import { Footer } from '@/components/footer'
-import { Header } from '@/components/header'
-import { Hero } from '@/components/hero'
-import { Quickstart } from '@/components/quickstart'
+import { Footer } from '@/components/layout/footer'
+import { Header } from '@/components/layout/header'
+import { ApiReference } from '@/components/sections/api-reference'
+import { Features } from '@/components/sections/features'
+import { Hero } from '@/components/sections/hero'
+import { Quickstart } from '@/components/sections/quickstart'
 
 export default function Home() {
     return (

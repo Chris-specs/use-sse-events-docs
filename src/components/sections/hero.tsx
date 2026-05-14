@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { buttonVariants } from './ui/button'
+import { buttonVariants } from '../ui/button'
 
 const STATS = [
     { val: '~1.5kB', label: 'gzipped size' },

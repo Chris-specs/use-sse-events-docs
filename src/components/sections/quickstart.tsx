@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { TABS } from '../constants/code-tabs'
-import { Button } from './ui/button'
+import { TABS } from '../../constants/code-tabs'
+import { Button } from '../ui/button'
 
 export function Quickstart() {
     const [active, setActive] = useState('basic')
