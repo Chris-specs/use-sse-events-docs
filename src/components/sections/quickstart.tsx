@@ -1,22 +1,9 @@
-'use client'
-
-import { useState } from 'react'
-import { TABS } from '../../constants/code-tabs'
-import { Button } from '../ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CODE_SNIPPETS, INSTALL_COMMANDS } from '../../constants/code-tabs'
+import { CodeBlock } from '../custom/codeblock'
+import { Icons } from '../custom/icons'
 
 export function Quickstart() {
-    const [active, setActive] = useState('basic')
-    const [copied, setCopied] = useState<string | null>(null)
-
-    const currentTab = TABS.find((t) => t.id === active)!
-
-    function handleCopy(text: string, id: string) {
-        navigator.clipboard.writeText(text).then(() => {
-            setCopied(id)
-            setTimeout(() => setCopied(null), 3000)
-        })
-    }
-
     return (
         <section
             id="quickstart"
@@ -35,70 +22,53 @@ export function Quickstart() {
                         no config, no ceremony.
                     </p>
                 </div>
-                <div className="flex flex-col gap-2 overflow-x-auto">
-                    {[
-                        { pm: 'pnpm', cmd: 'pnpm add use-sse-events' },
-                        { pm: 'npm', cmd: 'npm install use-sse-events' },
-                        { pm: 'bun', cmd: 'bun add use-sse-events' }
-                    ].map(({ pm, cmd }) => (
-                        <Button
-                            key={pm}
-                            size="lg"
-                            onClick={() => handleCopy(cmd, pm)}
-                            className="min-w-fit font-mono font-normal"
-                        >
-                            <span className="text-chart-2 mr-2">$</span>
-                            {cmd}
-                            <span className="text-muted ml-auto">
-                                {copied === pm ? 'copied!' : 'copy'}
-                            </span>
-                        </Button>
-                    ))}
+                <div className="bg-foreground flex flex-col">
+                    <Tabs
+                        defaultValue={INSTALL_COMMANDS[0].pm}
+                        className="gap-0"
+                    >
+                        <TabsList variant="line">
+                            {INSTALL_COMMANDS.map((cmd) => (
+                                <TabsTrigger
+                                    key={cmd.pm}
+                                    value={cmd.pm}
+                                    className="font-mono font-normal lowercase invert"
+                                >
+                                    {cmd.pm}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                        {INSTALL_COMMANDS.map((cmd) => (
+                            <TabsContent key={cmd.pm} value={cmd.pm}>
+                                <CodeBlock code={cmd.cmd} lang="zsh" />
+                            </TabsContent>
+                        ))}
+                    </Tabs>
                 </div>
             </div>
-            <div className="flex flex-col bg-[#1c1a16]">
-                {/* File tabs */}
-                <div className="flex overflow-x-auto border-b border-white/10 bg-[#141410]">
-                    {TABS.map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActive(tab.id)}
-                            className={[
-                                'flex cursor-pointer items-center gap-2 border-r border-white/10 px-5 py-2.5 font-mono text-[11px] tracking-wider whitespace-nowrap uppercase transition-colors',
-                                active === tab.id
-                                    ? 'border-b-accent border-b-2 bg-[#1c1a16] text-[#c9c3b8]'
-                                    : 'text-white/30 hover:text-white/60'
-                            ].join(' ')}
-                        >
-                            <span
-                                className={[
-                                    'h-2 w-2 shrink-0 rounded-full',
-                                    active === tab.id
-                                        ? 'bg-accent'
-                                        : 'bg-white/20'
-                                ].join(' ')}
-                            />
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Code */}
-                <div className="relative flex-1 overflow-x-auto p-8">
-                    <button
-                        onClick={() => {
-                            const raw = currentTab.code.replace(/<[^>]+>/g, '')
-                            handleCopy(raw, 'code')
-                        }}
-                        className="absolute top-4 right-4 border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[10px] text-white/30 transition-colors hover:bg-white/10 hover:text-white/70"
+            <div className="bg-foreground flex flex-col">
+                <Tabs defaultValue={CODE_SNIPPETS[0].id} className="gap-0">
+                    <TabsList
+                        variant="line"
+                        className="w-full justify-start overflow-x-auto"
                     >
-                        {copied === 'code' ? 'copied!' : 'copy'}
-                    </button>
-                    <pre
-                        className="font-mono text-[12.5px] leading-[1.75] whitespace-pre text-[#c9c3b8]"
-                        dangerouslySetInnerHTML={{ __html: currentTab.code }}
-                    />
-                </div>
+                        {CODE_SNIPPETS.map((tab) => (
+                            <TabsTrigger
+                                key={tab.id}
+                                value={tab.id}
+                                className="max-w-fit font-mono font-normal lowercase invert"
+                            >
+                                <Icons.react />
+                                {tab.label}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    {CODE_SNIPPETS.map((tab) => (
+                        <TabsContent key={tab.id} value={tab.id}>
+                            <CodeBlock code={tab.code} />
+                        </TabsContent>
+                    ))}
+                </Tabs>
             </div>
         </section>
     )
